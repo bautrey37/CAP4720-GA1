@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>GA1</title>
+		
+		<script src="../lib/webgl-utils.js"></script>
+		<script src="../lib/webgl-debug.js"></script>
+		<script src="../lib/cuon-utils.js"></script>
+		<script src="../lib/cuon-matrix.js"></script>
+		<script src="../data/cube.js"></script>
+		<script src="GA1.js"></script>
+		<script type="text/javascript">
+		var messageField = null;
+		
+		function addMessage(message){
+			var st = "-" + message + "\n";
+			messageField.value += st;
+		}
+		</script>		
+		
+	<body onLoad="main()">
+		<h1>Computer Graphics Group Project 1</h1>
+		<p>Group member names</p>
+		<canvas id="myCanvas" width="400px" height="400px" style="border:1px solid #000000"></canvas>
+		<textarea id="messageArea" rows="10" cols="49"></textarea>
+		<button type="button" id="messageClear">clear message</button><br/>
+		
+	</body>
+</html>
