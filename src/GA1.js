@@ -1,13 +1,13 @@
+//Global Variables
+var canvas = null;
+var gl = null;
+var program = null;
 
-function main() {
-	function addMessage(message) {
-		console.log(message);
-	}
-	
-	var canvas = null;
-	var gl = null;
-	var program = null;
+function addMessage(message) {
+	console.log(message);
+}
 
+function init() {
 	// Retrieve <canvas> element
 	canvas = document.getElementById('myCanvas'); 
 	addMessage(((canvas)?"Canvas acquired":"Error: No Canvas with id myCanvas could be located"));
@@ -37,7 +37,10 @@ function main() {
 	//Create the program from the shader code
 	program = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE);
 	addMessage(((program)?"Shader Program was successfully created":"Error: Failed to create program"));
-	
-	
+}
+
+function main() {
+
+	init();
 	return 1;
 }
