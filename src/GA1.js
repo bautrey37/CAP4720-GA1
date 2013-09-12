@@ -3,7 +3,7 @@ function main() {
 	function addMessage(message) {
 		console.log(message);
 	}
-	
+	// hello
 	var canvas = null;
 	var gl = null;
 	var program = null;
