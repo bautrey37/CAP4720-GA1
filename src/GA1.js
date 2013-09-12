@@ -3,9 +3,20 @@ var canvas = null;
 var gl = null;
 var program = null;
 
+<<<<<<< HEAD
 function addMessage(message) {
 	console.log(message);
 }
+=======
+function main() {
+	function addMessage(message) {
+		console.log(message);
+	}
+	// helloo
+	var canvas = null;
+	var gl = null;
+	var program = null;
+>>>>>>> 662d2aaf27545190d26c5d9550407e0754287ea5
 
 function init() {
 	// Retrieve <canvas> element
