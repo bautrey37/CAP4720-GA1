@@ -1,24 +1,12 @@
 //Computer Graphics Assignment 1
 
-// creates a 2-D array of size [m][n] and initializes each value to 0
-Array.matrix = function(m, n) {
-	// m - number of rows, n - number of columns
-	var mat = [], i, j, a;
-	for(i = 0; i < m; i++) {
-		a = [];
-		for(j = 0; j < n; j++) {
-			a[j] = 0;
-		}
-		mat[i] = a;
-	}
-	return mat;
-}
 
 function main(){
 	// global variables
-	var modelObject = teapotObject;
+	var modelObject = cubeObject;
 	var canvas = null;
 	var gl = null;
+	var loopCount = 0;
 	
 	canvas = document.getElementById("myCanvas");
 	addMessage(((canvas)?"Canvas acquired":"Error: Can not acquire canvas"));
@@ -26,14 +14,23 @@ function main(){
 	gl = getWebGLContext(canvas);
 	addMessage(((gl)?"Rendering context for WebGL acquired":"Error: Failed to get the rendering context for WebGL"));
 	
-	N = [2,4,2]; //dimensions, x - horizontal, y - vertical(height of cube of objects), z - depth
-	var myArray = Array.matrix(10,10); //creates and initializes [m,n] array to 0
+	//dimensions, x - horizontal, y - vertical(height of of objects), z - depth
+	// The itemLocations array stores how many models are in each square.
+	var itemLocation = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+				 [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+				 [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+				 [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+				 [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
+				 
+	// The item array stores every model.
+	var item = [];
 	
 	var angle = 0;
 	var model = new RenderableModel(gl,modelObject);
 
 	var modelbounds = model.getBounds();
-
+	var modelHeight = modelbounds.max[1]-modelbounds.min[1];
+	
 	var delta = Math.max(
 	    modelbounds.max[0]-modelbounds.min[0],
 	    modelbounds.max[1]-modelbounds.min[1],
@@ -49,9 +46,9 @@ function main(){
 	var sceneBounds = {};
 	sceneBounds.min = [modelbounds.min[0],modelbounds.min[1],modelbounds.min[2]]; // clone
 	sceneBounds.max = [
-		modelbounds.min[0]+N[0]*delta,
-	    modelbounds.min[1]+N[1]*delta,
-		modelbounds.min[2]+N[2]*delta
+		modelbounds.min[0]+10*delta,
+	    modelbounds.min[1]+10*delta,
+		modelbounds.min[2]+10*delta
 	];
 	
 	var camera = new Camera(gl,sceneBounds,[0,1,0]);
@@ -62,20 +59,59 @@ function main(){
 		var viewMatrix = camera.getRotatedViewMatrix(angle);
 		var modelMatrix=new Matrix4();
 		
-		var x = Math.floor(Math.random() * N[0]);
-		var y = Math.floor(Math.random() * N[2]);
-		myArray[x][y] += 1; //increments array value
-		console.log('x: ' + x + ', y: ' + y);
+		// Create a new model every ten loops.
+		if (loopCount == 10) {
+			loopCount = 0;
+			
+			// Get random x and z value for new model position.
+			var x = Math.floor(Math.random() * 10);
+			var z = Math.floor(Math.random() * 10);
+
+			// Create new model object instance and set its coordinates.
+			var newModel = new Model();
+			newModel.xCoor = x;
+			newModel.zCoor = z;
+			newModel.yCoor = modelHeight * 11; // The height of this new model is out of view of the camera.
+			//console.log(newModel.yCoor);
+			//console.log(itemLocation[x][z]);
+			itemLocation[x][z]++;
+			
+			// Add this new model to array of all models.
+			item.push(newModel);
+			
+		//	console.log(item[0].xCoor);
+			
+		}
+		else {
+			// Don't create a new model at this loop iteration.
+			loopCount++;
+		}
+
+		// Draw every existing model where necessary.
+		for (var i=0; i<item.length; i++) {
+			// Check if model's height will change.
+			if (item[i].yCoor > modelHeight * itemLocation[item[i].xCoor][item[i].zCoor]) {
+				// Decrease the height by a factor of 10.
+				item[i].yCoor -= modelHeight/10;
+			}
+			
+			// Translate the model matrix as necessary.
+			modelMatrix.setTranslate(item[i].xCoor * delta, item[i].yCoor * delta, item[i].zCoor * delta);
+			
+			// Draw it
+			model.draw(projMatrix, viewMatrix, modelMatrix);
 		
-		for (var z=0; z<N[2]; z++)
-			for (var y=0; y<N[1]; y++)
-				for (var x=0; x<N[0]; x++){
-					modelMatrix.setTranslate(x*delta, y*delta, z*delta)
-					           .translate(center[0],center[1],center[2])
-							   .rotate(angle*(x+y+z),0,1,1)
-							   .translate(-center[0],-center[1],-center[2]);
-					model.draw(projMatrix, viewMatrix, modelMatrix);
-				}
+		}
+		
+		//for (var z=0; z<N[2]; z++)
+			//for (var y=0; y<N[1]; y++)
+				//for (var x=0; x<N[0]; x++){
+					//modelMatrix.setTranslate(xCoor*delta, yCoor*delta, zCoor*delta)
+					           //.translate(center[0],center[1],center[2])
+							   //.rotate(angle*(x+y+z),0,1,1)
+							   //.translate(-center[0],-center[1],-center[2]);
+							//model.draw(projMatrix, viewMatrix, modelMatrix);
+				//}
 		angle++; if (angle > 360) angle -= 360;
 		animateID = window.requestAnimationFrame(draw);
 	}
@@ -87,5 +123,11 @@ function main(){
 	
 	draw();
 	return 1;
+	
+	
+	
 }
 
+function Model() {
+	var xCoor, yCoor, zCoor;
+}
