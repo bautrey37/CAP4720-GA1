@@ -2,10 +2,8 @@
 var canvas = null;
 var gl = null;
 var program = null;
-
-function addMessage(message) {
-	console.log(message);
-}
+var modelObject = cubeObject;
+var myArray;
 
 function init() {
 	// Retrieve <canvas> element
@@ -37,10 +35,39 @@ function init() {
 	//Create the program from the shader code
 	program = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE);
 	addMessage(((program)?"Shader Program was successfully created":"Error: Failed to create program"));
+	
+	// creates a 2-D array of size [m][n] and initializes each value to 0
+	Array.matrix = function(m, n) {
+		// m - number of rows, n - number of columns
+		var mat = [], i, j, a;
+		for(i = 0; i < m; i++) {
+			a = [];
+			for(j = 0; j < n; j++) {
+				a[j] = 0;
+			}
+			mat[i] = a;
+		}
+		return mat;
+	}
+	
+	//create a 2D matrix
+	myArray = Array.matrix(10,10);
+	
+	
 }
+
+
+
+
 
 function main() {
 
 	init();
+	
+	function draw() {
+
+	}
+	
+	
 	return 1;
 }

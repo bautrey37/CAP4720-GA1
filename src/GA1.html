@@ -9,15 +9,23 @@
 		<script src="../lib/cuon-utils.js"></script>
 		<script src="../lib/cuon-matrix.js"></script>
 		<script src="../data/cube.js"></script>
+		<script src="../data/teapot.js"></script>
+		<script src="../data/skull.js"></script>
 		<script src="GA1.js"></script>
+		<script src="renderable.js"></script>
+		<script src="camera.js"></script>
+		
 		<script type="text/javascript">
 		//html related stuff
-		//test added line 
+		function addMessage(message) {
+			console.log(message);
+		}
+		
 		</script>		
 		
 	<body onLoad="main()">
-		<h1>Computer Graphics Group Project 1</h1>
-		<p>Group member names</p>
+		<h1>Computer Graphics Group Assignment 1</h1>
+		<p>Brandon Autrey<br>J Cervera<br>Cole Garner<br>Michael Funchess<br>Michael Zellars</p>
 		<canvas id="myCanvas" width="400px" height="400px" style="border:1px solid #000000"></canvas>	
 		<select id="menu" onchange="menuHandler();"></select><br/>
 	</body>
