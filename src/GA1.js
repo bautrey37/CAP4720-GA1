@@ -14,13 +14,30 @@ Array.matrix = function(m, n) {
 	return mat;
 }
 
+var modelObject = cubeObject;
+function menuHandler(menu){
+	if(menu.options[menu.selectedIndex].value == "skull"){
+		modelObject = skullObject;
+	}
+	if(menu.options[menu.selectedIndex].value == "teapot"){
+		modelObject = teapotObject;
+	}
+	if(menu.options[menu.selectedIndex].value == "cube"){
+		modelObject = cubeObject;
+	}
+	main();
+}
+
 function main(){
 	// global variables
-	var modelObject = cubeObject;
+	
+	
 	var canvas = null;
+
 	var gl = null;
 	var loopCount = 0;
 	var N = [5,10,5]; // 0:x, 1:y, 2:z; dimensions
+	
 	
 	canvas = document.getElementById("myCanvas");
 	addMessage(((canvas)?"Canvas acquired":"Error: Can not acquire canvas"));
@@ -39,7 +56,16 @@ function main(){
 	var model = new RenderableModel(gl,modelObject);
 
 	var modelbounds = model.getBounds();
-	var modelHeight = (modelbounds.max[1]-modelbounds.min[1])/2;
+	var modelHeight;
+	if(modelObject == cubeObject){
+		modelHeight = (modelbounds.max[1]-modelbounds.min[1])/2;
+	}
+	if(modelObject == skullObject){
+		modelHeight = (modelbounds.max[1]-modelbounds.min[1])/500;
+	}
+	if(modelObject == teapotObject){
+		modelHeight = (modelbounds.max[1]-modelbounds.min[1])/50;
+	}
 
 	
 	var delta = Math.max(
@@ -83,6 +109,11 @@ function main(){
 			newModel.xCoor = x;
 			newModel.zCoor = z;
 			newModel.yCoor = modelHeight * 11; // The height of this new model is out of view of the camera.
+			if(modelObject == teapotObject){
+			//Teapots fall from a different height because the
+			//usual height is too small.
+				newModel.yCoor = modelHeight * 29;
+			}
 			//console.log(newModel.yCoor);
 			//console.log(itemLocation[x][z]);
 			newModel.dropLocation = modelHeight * itemLocation[x][z];
