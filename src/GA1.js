@@ -1,6 +1,17 @@
-//Computer Graphics Assignment 1
+/*
+Computer Graphics Project 1
+CAP 4720
+9/24/13
 
-// creates a 2-D array of size [m][n] and initializes each value to 0
+Brandon Autrey
+J Cervera
+Cole Garner
+Michael Funchess
+Michael Zellars
+*/
+
+
+// Creates a 2-D array of size [m][n] and initializes each value to 0
 Array.matrix = function(m, n) {
 	// m - number of rows, n - number of columns
 	var mat = [], i, j, a;
@@ -30,10 +41,7 @@ function menuHandler(menu){
 
 function main(){
 	// global variables
-	
-	
 	var canvas = null;
-
 	var gl = null;
 	var loopCount = 0;
 	var N = [5,10,5]; // 0:x, 1:y, 2:z; dimensions
@@ -46,7 +54,7 @@ function main(){
 	addMessage(((gl)?"Rendering context for WebGL acquired":"Error: Failed to get the rendering context for WebGL"));
 	
 	// dimensions, x - horizontal, y - vertical(height of of objects), z - depth
-	// The itemLocations array stores how many models are in each square.
+	// The itemLocation array stores how many models are in each square.
 	var itemLocation = Array.matrix(N[0], N[2]);
 	
 	// The item array stores every model.
@@ -67,7 +75,6 @@ function main(){
 		modelHeight = (modelbounds.max[1]-modelbounds.min[1])/50;
 	}
 
-	
 	var delta = Math.max(
 	    modelbounds.max[0]-modelbounds.min[0],
 	    modelbounds.max[1]-modelbounds.min[1],
@@ -114,8 +121,7 @@ function main(){
 			//usual height is too small.
 				newModel.yCoor = modelHeight * 29;
 			}
-			//console.log(newModel.yCoor);
-			//console.log(itemLocation[x][z]);
+
 			newModel.dropLocation = modelHeight * itemLocation[x][z];
 			itemLocation[x][z]++;
 			
@@ -140,7 +146,6 @@ function main(){
 			
 			// Draw it
 			model.draw(projMatrix, viewMatrix, modelMatrix);
-		
 		}
 		
 		angle++; if (angle > 360) angle -= 360;
@@ -154,8 +159,6 @@ function main(){
 	
 	draw();
 	return 1;
-	
-	
 	
 }
 
