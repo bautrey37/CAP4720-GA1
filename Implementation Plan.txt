@@ -1,0 +1,32 @@
+Implementation Plan.
+
+Group Members:
+ 
+Cole Garner
+Juan Cervera
+Michael Zellars
+Brandon Autrey
+Michael Funchess
+
+Major Componenents:
+
+-Camera
+-Renderables/Drawables for each type of object
+-Array to store size of columns
+-Array of objects
+
+Implementation Details:
+
+-2d Array to store how many object "raindrops" are in each column. 
+-Initialize Array to 0's
+-Create renderable/drawable for each type of raindrop
+	-Resize object dimensions based on camera size.
+-Randomly generate 2 values (one for x dimension of array, one for z) for where to drop object.
+-Calculate how far down object drops based off of 2d array
+-Add the created array drop into 2d array.
+-Redraw all of the objects.
+-Create camera functionality based on height of a object multiplied by a scalar and the object width multiplied by a scalar
+-Link all javascript files in HTML file.
+-In HTML use menu handler functionality to choose which object to drop.
+
+

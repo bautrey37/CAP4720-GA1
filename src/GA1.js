@@ -4,12 +4,14 @@ CAP 4720
 9/24/13
 
 Brandon Autrey
-J Cervera
+Juan Cervera
 Cole Garner
 Michael Funchess
 Michael Zellars
 */
-
+function addMessage(message) {
+	console.log(message);
+}
 
 // Creates a 2-D array of size [m][n] and initializes each value to 0
 Array.matrix = function(m, n) {
@@ -25,16 +27,20 @@ Array.matrix = function(m, n) {
 	return mat;
 }
 
-var modelObject = cubeObject;
+var animateID; //used for switching animation
+var modelObject = cubeObject; //initial object to be displayed
 function menuHandler(menu){
 	if(menu.options[menu.selectedIndex].value == "skull"){
 		modelObject = skullObject;
+		window.cancelAnimationFrame(animateID); //cancels previous animation
 	}
 	if(menu.options[menu.selectedIndex].value == "teapot"){
 		modelObject = teapotObject;
+		window.cancelAnimationFrame(animateID);
 	}
 	if(menu.options[menu.selectedIndex].value == "cube"){
 		modelObject = cubeObject;
+		window.cancelAnimationFrame(animateID);
 	}
 	main();
 }
@@ -44,13 +50,12 @@ function main(){
 	var canvas = null;
 	var gl = null;
 	var loopCount = 0;
-	var N = [5,10,5]; // 0:x, 1:y, 2:z; dimensions
-	
+	var N = [7,7,7]; // 0:x, 1:y, 2:z; dimensions
 	
 	canvas = document.getElementById("myCanvas");
 	addMessage(((canvas)?"Canvas acquired":"Error: Can not acquire canvas"));
 	
-	gl = getWebGLContext(canvas);
+	gl = getWebGLContext(canvas, false);
 	addMessage(((gl)?"Rendering context for WebGL acquired":"Error: Failed to get the rendering context for WebGL"));
 	
 	// dimensions, x - horizontal, y - vertical(height of of objects), z - depth
@@ -110,23 +115,27 @@ function main(){
 			// Get random x and z value for new model position.
 			var x = Math.floor(Math.random() * N[0]);
 			var z = Math.floor(Math.random() * N[2]);
+			//if (x,z) location has reached its maximum amount of models
+			if(itemLocation[x][z] < N[1]) {
+				// Create new model object instance and set its coordinates.
+				var newModel = new Model();
+				newModel.xCoor = x;
+				newModel.zCoor = z;
+				newModel.yCoor = modelHeight * 11; // The height of this new model is out of view of the camera.
+				if(modelObject == teapotObject){
+				//Teapots fall from a different height because the
+				//usual height is too small.
+					newModel.yCoor = modelHeight * 29;
+				}
 
-			// Create new model object instance and set its coordinates.
-			var newModel = new Model();
-			newModel.xCoor = x;
-			newModel.zCoor = z;
-			newModel.yCoor = modelHeight * 11; // The height of this new model is out of view of the camera.
-			if(modelObject == teapotObject){
-			//Teapots fall from a different height because the
-			//usual height is too small.
-				newModel.yCoor = modelHeight * 29;
+				newModel.dropLocation = modelHeight * itemLocation[x][z];
+				itemLocation[x][z]++;
+				
+				// Add this new model to array of all models.
+				item.push(newModel);		
 			}
 
-			newModel.dropLocation = modelHeight * itemLocation[x][z];
-			itemLocation[x][z]++;
-			
-			// Add this new model to array of all models.
-			item.push(newModel);			
+				
 		}
 		else {
 			// Don't create a new model at this loop iteration.
@@ -154,10 +163,24 @@ function main(){
 
 	gl.clearColor(0,0,0,1);
 	gl.enable(gl.DEPTH_TEST);
-
-	var animateID;
 	
+	var animate = true;
 	draw();
+	
+	// toggles the animation by stop/start
+	var t_button = document.getElementById("toggle");
+	t_button.onclick = function() {
+		if(animate) {
+			window.cancelAnimationFrame(animateID);
+			animate = false;
+		}
+		else {
+			draw();
+			animate = true;
+		}
+		
+	}
+	
 	return 1;
 	
 }
