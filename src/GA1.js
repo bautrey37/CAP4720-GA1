@@ -32,15 +32,15 @@ var modelObject = cubeObject; //initial object to be displayed
 function menuHandler(menu){
 	if(menu.options[menu.selectedIndex].value == "skull"){
 		modelObject = skullObject;
-		clearInterval(animateID); //cancels previous animation
+		window.cancelAnimationFrame(animateID); //cancels previous animation
 	}
 	if(menu.options[menu.selectedIndex].value == "teapot"){
 		modelObject = teapotObject;
-		clearInterval(animateID);
+		window.cancelAnimationFrame(animateID);
 	}
 	if(menu.options[menu.selectedIndex].value == "cube"){
 		modelObject = cubeObject;
-		clearInterval(animateID);
+		window.cancelAnimationFrame(animateID);
 	}
 	main();
 }
@@ -109,7 +109,7 @@ function main(){
 		var modelMatrix = new Matrix4();
 		
 		// Create a new model every ten loops.
-		if (loopCount == 5) {
+		if (loopCount == 10) {
 			loopCount = 0;
 			
 			// Get random x and z value for new model position.
@@ -133,7 +133,9 @@ function main(){
 				
 				// Add this new model to array of all models.
 				item.push(newModel);		
-			}				
+			}
+
+				
 		}
 		else {
 			// Don't create a new model at this loop iteration.
@@ -156,26 +158,27 @@ function main(){
 		}
 		
 		angle++; if (angle > 360) angle -= 360;
+		animateID = window.requestAnimationFrame(draw);
 	}
 
 	gl.clearColor(0,0,0,1);
-	gl.enable(gl.DEPTH_TEST); //expensive operation
+	gl.enable(gl.DEPTH_TEST);
 	
 	var animate = true;
-	var delay = 20;
-	animateID = window.setInterval(function(){draw();}, delay);
+	draw();
 	
 	// toggles the animation by stop/start
 	var t_button = document.getElementById("toggle");
 	t_button.onclick = function() {
 		if(animate) {
-			clearInterval(animateID);
+			window.cancelAnimationFrame(animateID);
 			animate = false;
 		}
 		else {
-			animateID = window.setInterval(function(){draw();}, delay);
+			draw();
 			animate = true;
-		}	
+		}
+		
 	}
 	
 	return 1;
