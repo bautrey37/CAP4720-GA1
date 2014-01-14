@@ -1,4 +1,4 @@
-COP4720-GA1
+CAP4720-GA1
 =======================
 
-Computer Graphics Class at UCF, Fall 2013.
+Computer Graphics Class Project 1 at UCF Fall 2013.
